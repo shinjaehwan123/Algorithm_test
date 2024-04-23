@@ -1,5 +1,7 @@
-Gold/bin/
-Silver/bin/
-Bronze/bin/
-Gold/obj/
+3_Gold/bin/
+2_Silver/bin/
+1_Bronze/bin/
+3_Gold/obj/
+4_samsung/bin/
+5_softeer/bin/
 *.o

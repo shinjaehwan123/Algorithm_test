@@ -1,0 +1,1 @@
+fs(nx, ny, depth + 1, harvest + gra
