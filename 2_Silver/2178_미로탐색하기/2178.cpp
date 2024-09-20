@@ -85,3 +85,62 @@ void BFS(int n){
     }    
 }
 #endif
+
+
+
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+int dx[] = {0,1,0,-1};
+int dy[] = {1,0,-1,0};
+int graph[100][100];
+bool visited[100][100] = {0,};
+int N,M;
+void BFS(int i, int j);
+
+int main(void){
+    cin >> N >> M;
+    
+    for(int i=0; i<N; i++){
+        string s;
+        cin >> s;
+        for(int j=0; j<M; j++){
+            graph[i][j] = s[j] -'0';
+        }
+    }
+    BFS(0,0);
+
+    cout << graph[N-1][M-1] << endl;
+}
+
+void BFS(int i, int j){
+    queue<pair<int,int>> myqueue;
+    myqueue.push(make_pair(i,j));
+
+    while(!myqueue.empty()){
+        pair<int,int> now = myqueue.front();
+        int now_x = now.first;
+        int now_y = now.second;
+        visited[now_x][now_y] = true;
+
+        myqueue.pop();
+
+        for(int i=0; i<4; i++){
+            int next_x = now_x + dx[i];
+            int next_y = now_y + dy[i];
+
+            if(next_x < 0 || next_x >=N || next_y <0 || next_y >=M){
+                continue;
+            }
+            if(graph[next_x][next_y] !=0 &&  !visited[next_x][next_y]){
+                myqueue.push(make_pair(next_x,next_y));
+                graph[next_x][next_y] = graph[now_x][now_y] + 1;
+                visited[next_x][next_y] = true;
+            }
+        }
+    }
+    
+}

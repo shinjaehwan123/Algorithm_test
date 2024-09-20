@@ -1,3 +1,5 @@
+//mycode
+
 #include <iostream>
 #include <vector>
 #include <cstring>
@@ -7,6 +9,7 @@ using namespace std;
 
 const int MAX_N = 22;
 const int MAX_DEPTH = 3;
+bool visited[MAX_N][MAX_N];
 int n, m;
 int graph[MAX_N][MAX_N]={0,};
 vector<pair<int, int>> friends;
@@ -26,13 +29,16 @@ void dfs(int x, int y, int depth, vector<pair<int, int>>& current_path, vector<v
     for (int dir = 0; dir < 4; dir++) {
         int nx = x + dx[dir];
         int ny = y + dy[dir];
-        if (nx >= 1 && nx <= n && ny >= 1 && ny <= n) {
+        if (nx >= 1 && nx <= n && ny >= 1 && ny <= n && !visited[nx][ny]) {
+            visited[nx][ny]= true;
             current_path.push_back(make_pair(nx,ny));
             dfs(nx, ny, depth + 1, current_path, all_paths);
             //depth가 4개인 것을 pop해줌. vector는 후입선출
+            visited[nx][ny] = false;
             current_path.pop_back();
         }
     }
+
 }
 
 int calculateHarvest(const vector<vector<pair<int, int>>>& chosen_paths) {
@@ -46,8 +52,8 @@ int calculateHarvest(const vector<vector<pair<int, int>>>& chosen_paths) {
         }
     }
 
-    for (const auto& path : chosen_paths) {
-        for (const auto& p : path) {
+    for (const vector<pair<int,int>> & path : chosen_paths) {
+        for (const pair<int,int> & p : path) {
             int x = p.first, y = p.second;
             //if (temp_graph[x][y] > 0) {
                 harvest += temp_graph[x][y];
@@ -59,17 +65,19 @@ int calculateHarvest(const vector<vector<pair<int, int>>>& chosen_paths) {
 }
 
 void findMaxHarvest(int idx, vector<vector<pair<int, int>>>& chosen_paths, int& max_harvest) {
-    if (idx == m) {
+    if (idx == m) { //모든 참가자의 조합을 선택했으면
         max_harvest = max(max_harvest, calculateHarvest(chosen_paths));
         return;
     }
 
+    //각각 참여자의 path 4칸을 찾음.
     for (const vector<pair<int, int>> & path : paths[idx]) {
         chosen_paths.push_back(path);
         findMaxHarvest(idx + 1, chosen_paths, max_harvest);
         chosen_paths.pop_back();
     }
 }
+
 
 int main() {
     ios::sync_with_stdio(false);
@@ -124,7 +132,105 @@ int main() {
 
 
 
+//정답 코드
+#if 0
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
 
+using namespace std;
+
+const int MAX_N = 22;
+const int MAX_DEPTH = 3;
+int n, m;
+vector<vector<int>> graph(MAX_N, vector<int>(MAX_N));
+vector<pair<int, int>> friends;
+vector<vector<vector<pair<int, int>>>> paths;
+
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+void dfs(int x, int y, int depth, vector<pair<int, int>>& current_path, vector<vector<pair<int, int>>>& all_paths) {
+    if (depth == MAX_DEPTH) {
+        all_paths.push_back(current_path);
+        return;
+    }
+
+    for (int dir = 0; dir < 4; dir++) {
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+        if (nx >= 1 && nx <= n && ny >= 1 && ny <= n) {
+            current_path.push_back({nx, ny});
+            dfs(nx, ny, depth + 1, current_path, all_paths);
+            current_path.pop_back();
+        }
+    }
+}
+
+int calculateHarvest(const vector<vector<pair<int, int>>>& chosen_paths) {
+    int harvest = 0;
+    vector<vector<int>> temp_graph = graph;  // Deep copy 생성
+    for (const auto& path : chosen_paths) {
+        for (const auto& p : path) {
+            int x = p.first, y = p.second;
+            //if (temp_graph[x][y] > 0) {
+                harvest += temp_graph[x][y];
+                temp_graph[x][y] = 0; // Avoid double counting
+            //}
+        }
+    }
+    return harvest;
+}
+
+void findMaxHarvest(int idx, vector<vector<pair<int, int>>>& chosen_paths, int& max_harvest) {
+    if (idx == m) {
+        max_harvest = max(max_harvest, calculateHarvest(chosen_paths));
+        return;
+    }
+
+    for (const auto& path : paths[idx]) {
+        chosen_paths.push_back(path);
+        findMaxHarvest(idx + 1, chosen_paths, max_harvest);
+        chosen_paths.pop_back();
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> graph[i][j];
+        }
+    }
+
+    friends.resize(m);
+    paths.resize(m);
+
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        cin >> x >> y;
+        friends[i].first =x;
+        friends[i].second =y;
+        vector<pair<int, int>> current_path = {{x, y}};
+        vector<vector<pair<int, int>>> all_paths;
+        dfs(x, y, 0, current_path, all_paths);
+        paths[i] = all_paths;
+    }
+
+    int max_harvest = 0;
+    vector<vector<pair<int, int>>> chosen_paths;
+    findMaxHarvest(0, chosen_paths, max_harvest);
+
+    cout << max_harvest << "\n";
+
+    return 0;
+}
+#endif
 
 
 

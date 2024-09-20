@@ -16,7 +16,7 @@ int main(void){
     cin >> N;
     
     vector<pair<int,int>> A;
-    vector<pair<int,int>> B(1,{0,0});
+    //vector<pair<int,int>> B(1,{0,0});
 
 
     //cout << B.back().first << " "<< B.back().second << endl;
@@ -46,7 +46,6 @@ int main(void){
         }
     }
 
-
     cout << count<< endl;
 
     // //  for(int i=0; i<N; i++){
@@ -59,7 +58,7 @@ int main(void){
 
 bool compare(const pair<int, int> & a, const pair<int,int> &b){
     if(a.second == b.second){
-        return a.first  < b.first;
+        return a.first  < b.first; //오름차
     }
     return a.second < b.second; //오름차순
 }

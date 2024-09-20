@@ -4,6 +4,99 @@
 
 using namespace std;
 
+int arr[51][51] = {0,};
+int visited[51][51] = {0,};
+int dx[4] = {0,-1,0,1};
+int dy[4] = {1,0,-1,0};
+
+void DFS(int i, int j);
+
+int M,N,K; //M은 가로길이, N은 세로길이, K는 배추가 심어져있는 개수이다.
+
+int main(void){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int T; //case 입력을 한다.
+
+    cin >> T;
+
+    for(int i=1; i<=T; i++){
+        //M은 가로길이, N은 세로길이 이다.
+        cin >> M >> N;
+        cin >> K;
+        //배추가 심어져 있는 case를 입력함
+        
+        for(int i=0; i<K; i++){
+            //가로길이, 세로 길이가 주어진다.
+            int w,h;
+            cin >> w >> h;
+            arr[h][w] = 1;
+        }
+
+        int cnt=0;
+
+        //N은 세로길이, M은 가로길이
+        for(int i=0; i<N; i++){
+            for(int j=0; j<M; j++){
+                if(arr[i][j] == 1){
+                    DFS(i,j);
+                    cnt++;
+                }
+            }
+        }
+
+        //이제 cnt의 개수를 추력한다.
+        cout << cnt << endl;
+
+        //이제 초기화를 시킨다.
+        for(int i=0; i<N; i++){
+            //배추의 길이를 초기화 시킨다.
+            fill(arr[i], arr[i] + M, 0);
+            fill(visited[i], visited[i] + M, false);
+        }
+    }
+
+    return 0;
+}
+
+//지렁이가 얼마큼 필요한지 구하는 DFS 함수 
+void DFS(int i, int j){
+    //길이가 1이면 DFS를 수행하면서 0으로 바꿔준다.
+    visited[i][j] = 1;
+    arr[i][j] = 0;
+    
+    for(int u=0; u<4; u++){
+        int next_x = i + dx[u];
+        int next_y = j + dy[u];
+
+        if(next_x <0 || next_x >= N || next_y < 0 || next_y >= M){
+            continue;
+        }
+
+        //방문한 곳은 안가도 됨
+        if(!visited[next_x][next_y]){
+            //1이여야됨.
+            if(arr[next_x][next_y] == 1){
+                visited[next_x][next_y] = 1;
+                //지렁이가 지나갈 수 있는 장소이기 때문에 0으로 초기화를 시킨다.
+                arr[next_x][next_y] = 0;
+
+                DFS(next_x, next_y);
+            }
+        }
+    }
+}
+
+
+
+#if 0
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
 int arr[51][51]={0,};
 int visited[51][51]={0,};
 int dx[4] = {0,-1,0,1};
@@ -76,6 +169,7 @@ void DFS(int i, int j){
     }
 
 }
+#endif
 
 
 

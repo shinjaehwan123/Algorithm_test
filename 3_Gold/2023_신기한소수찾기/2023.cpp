@@ -5,6 +5,46 @@
 #include <cmath>
 
 using namespace std;
+//https://khu98.tistory.com/227 참조
+
+//###################################################################################################
+//아리스토텔레스체 sqrt이용구현
+#if 0
+int number = 120; // 구하고자 하는 소수의 범위
+int primeNum[121];
+
+void primeNumberSieve()
+{
+    // primeNum 배열 초기화
+    for (int i = 2; i <= number; i++)
+    {
+        primeNum[i] = i;
+    }
+
+    for (int i = 2; i <= sqrt(number); i++)
+    {
+        // primeNum[i] 가 0이면 이미 소수가 아니므로 continue
+        if (primeNum[i] == 0)
+            continue;
+        // i*k (k<i) 까지의 수는 이미 검사했으므로 j는 i*i 부터 검사해준다.
+        for (int j = i * i; j <= number; j += i)
+            primeNum[j] = 0;
+    }
+
+    // 소수 출력
+    for (int i = 2; i <= number; i++)
+    {
+        if (primeNum[i] != 0)
+            printf("%d\n", primeNum[i]);
+    }
+}
+int main()
+{
+    primeNumberSieve();
+}
+#endif
+
+
 //###################################################################################################
 //[참고] 소수 판정 알고리즘 (에라토스테네스의 체)
 #if 0
@@ -21,7 +61,7 @@ bool isPrime(){
         if(a[i]==0){
             continue;
         }
-        for(int j= i; j<=number; j+=i ){
+        for(int j= i+i; j<=number; j+=i ){
             a[j]=0;
         }
     }
@@ -88,3 +128,4 @@ bool isPrime(int num){
     }
     return true;
 }
+

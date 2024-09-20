@@ -17,12 +17,12 @@ void quick_sort(int data[], int start, int end){
 			high--;
 		}
 		if(low < high){
-			swap(data, lowm high);
+			swap(data, low, high);
 		}
 	}
 	swap(data,high, pivot);
 	quick_sort(data, start, high-1);
-	quick_sort(data, high+1);
+	quick_sort(data, high+1,end);
 }
 
 int main(void){

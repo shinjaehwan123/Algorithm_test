@@ -1,3 +1,122 @@
+//내코듣 방향성이 없으면 start, end 둘다 push를 해줘야한다.
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+void DFS(int i);
+int K,V,E;
+vector<vector<int>>distance_info;
+vector<bool> mdistance;
+vector<int> check; //인접한 노드인지 아닌지 확인하는 flag라고 생각하면 편함.
+int flag = false;
+
+int main(void){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> K;
+
+    for(int j=0; j<K; j++){
+        flag = false;
+        cin >> V >> E;
+
+        //1부터 V까지 번호가 붙어져 있음
+        distance_info.resize(V+1);
+        mdistance.resize(V+1, false);
+        check.resize(V+1,0);
+
+        //edge의 수만큼 반복을 한다.
+        for(int i=0; i<E; i++){
+            int start,end;
+            cin >> start >> end;
+            distance_info[start].push_back(end);
+            distance_info[end].push_back(start);
+        }
+
+        //이제 모든 정보를 넣었으니까 DFS로 비교를 해준다.
+
+        //그래프가 다 붙어 있어야 될 보장은 없다. 따라서 모든 노드에 대해서 다 해준다.
+
+        for(int i=1; i<=V; i++){
+            DFS(i);
+        }
+        
+
+        //여기에서 모든 정보를 초기화 시켜준다.
+        fill(mdistance.begin(), mdistance.end(),false);
+        
+
+        //distnace_info 정보도 다 날린다. 즉 clear해줘야한다.
+        for(int i=1; i<=V; i++){
+            distance_info[i].clear(); //  이 문법이 맞나 ?
+        }
+
+        check.clear();
+
+        if(flag){
+            cout << "NO" << endl;
+        }
+        else{
+            cout << "YES" << endl;
+        }
+    }
+
+
+    return 0;
+}
+
+
+void DFS(int i){
+    
+    //방문을 했으면 일단 true로 설정을 해준다.
+    mdistance[i] = true;
+
+    for(int node : distance_info[i]){
+        //처음 방문을 했으면 check +1 을해준다. 전 노드의
+        if(mdistance[node]==false){
+            check[node] = (check[i]+1)%2;
+            //mdistance[node] = true;
+            DFS(node);
+        }
+        else if(mdistance[node]==true){
+            if(check[node] == check[i]){
+                flag = true;
+            }
+        } 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if 0
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -77,6 +196,7 @@ void DFS(int node,int r){
     }
 
 }
+#endif
 
 
 

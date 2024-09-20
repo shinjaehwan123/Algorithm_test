@@ -1,3 +1,99 @@
+//내코드 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+//A가 B를 신뢰한다. B를 해킹하면 A도 해킹할 수 있음.
+vector<vector<int>> graph;
+vector<bool> visited;
+int N, M;
+void DFS(int node);
+vector<int> answer;
+
+int main(void){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> N >> M;
+
+    //1번부터 N번까지 번호가 부여됨.
+    graph.resize(N+1);
+    visited.resize(N+1,false);
+    answer.resize(N+1,0);
+
+    //이제 신뢰관계를 넣어준다.
+    for(int i=0; i<M; i++){
+        int start, end;
+
+        cin >> start >> end;
+        //start가 end를 신뢰한다.
+        graph[start].push_back(end);
+    }
+
+    //이제 하나씩 해킹하면서 찾아본다.
+
+    for(int i=1; i<=N; i++){
+        DFS(i);
+        fill(visited.begin(), visited.end(), false);
+    }
+
+    int min =0;
+
+    // for(int i=1; i< answer.size(); i++){
+    //     cout << answer[i] << " ";
+
+    // }
+    // cout << endl;
+
+    for(int i=1; i<=N; i++){
+        if(answer[i] > min){
+            min = answer[i];
+        }
+    }
+    // cout << min << endl;
+    
+    vector<int> compare;
+
+    for(int i=1; i<=N; i++){
+        if(answer[i] == min){
+            compare.push_back(i);
+        }
+    }
+
+    sort(compare.begin(), compare.end());
+
+    //이제 compare 값을 출력한다.
+    for(int i=0; i < compare.size(); i++){
+        cout << compare[i] << " ";
+    }
+
+    return 0;
+    
+}
+
+void DFS(int node){
+    visited[node] = true;
+
+    for(int collection : graph[node]){
+        if(!visited[collection]){
+            //이건 선택이다.
+            visited[collection] = true;
+            //visited 여기서 해도 되고 안해도 되고
+            answer[collection]++;
+            DFS(collection);
+        }
+    }
+
+}
+
+
+//==============================================================================================
+
+
 //silver 1 효율적으로 해킹하기
 #if 0
 #include <iostream>

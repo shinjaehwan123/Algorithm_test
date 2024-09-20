@@ -74,6 +74,13 @@ void calculate(void){
     
 }
 
+// 1~6까지 있다고 가정
+// 1 2 3
+// visited[3] = false가 됨.
+// ....
+// visited[6] = false가 됨. for문을 탈출함.
+// 이제 모든 for문을 탈출 했으니까 visited[2]가 false가 됨 이제 visited[3]이 true가 되고 반복
+
 void do_it(int idx, int cnt){
     if(cnt == M){
        calculate();
